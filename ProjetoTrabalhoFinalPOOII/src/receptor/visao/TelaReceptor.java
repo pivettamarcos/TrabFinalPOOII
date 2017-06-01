@@ -76,52 +76,52 @@ public class TelaReceptor extends JFrame {
 		));
 		scrollPane.setViewportView(table);
 		
-		JLabel lblEmissor = new JLabel("Emissor 1");
-		lblEmissor.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		lblEmissor.setBounds(10, 11, 73, 14);
-		contentPane.add(lblEmissor);
+		JLabel lblEmissor1 = new JLabel("Emissor 1");
+		lblEmissor1.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		lblEmissor1.setBounds(10, 11, 73, 14);
+		contentPane.add(lblEmissor1);
 		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(TelaReceptor.class.getResource("/icones/ok1.png")));
-		lblNewLabel.setBounds(66, 11, 46, 14);
-		contentPane.add(lblNewLabel);
+		JLabel lblEmissor2 = new JLabel("Emissor 2");
+		lblEmissor2.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		lblEmissor2.setBounds(181, 11, 73, 14);
+		contentPane.add(lblEmissor2);
 		
-		JLabel label_1 = new JLabel("Emissor 1");
-		label_1.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		label_1.setBounds(181, 11, 73, 14);
-		contentPane.add(label_1);
+		JLabel lblEmissor3 = new JLabel("Emissor 3");
+		lblEmissor3.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		lblEmissor3.setBounds(350, 11, 69, 14);
+		contentPane.add(lblEmissor3);
 		
-		JLabel label_4 = new JLabel("Emissor 1");
-		label_4.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		label_4.setBounds(350, 11, 69, 14);
-		contentPane.add(label_4);
+		JLabel lblImgOK1 = new JLabel("");
+		lblImgOK1.setIcon(new ImageIcon(TelaReceptor.class.getResource("/icones/ok1.png")));
+		lblImgOK1.setBounds(66, 11, 46, 14);
+		contentPane.add(lblImgOK1);
 		
-		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon(TelaReceptor.class.getResource("/icones/ok1.png")));
-		label.setBounds(237, 11, 46, 14);
-		contentPane.add(label);
+		JLabel lblImgOK2 = new JLabel("");
+		lblImgOK2.setIcon(new ImageIcon(TelaReceptor.class.getResource("/icones/ok1.png")));
+		lblImgOK2.setBounds(237, 11, 46, 14);
+		contentPane.add(lblImgOK2);
 		
-		JLabel label_2 = new JLabel("");
-		label_2.setHorizontalAlignment(SwingConstants.RIGHT);
-		label_2.setIcon(new ImageIcon(TelaReceptor.class.getResource("/icones/ok1.png")));
-		label_2.setBounds(373, 11, 46, 14);
-		contentPane.add(label_2);
+		JLabel lblImgOK3 = new JLabel("");
+		lblImgOK3.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblImgOK3.setIcon(new ImageIcon(TelaReceptor.class.getResource("/icones/ok1.png")));
+		lblImgOK3.setBounds(373, 11, 46, 14);
+		contentPane.add(lblImgOK3);
 		
-		JLabel label_3 = new JLabel("");
-		label_3.setIcon(new ImageIcon(TelaReceptor.class.getResource("/icones/clean.png")));
-		label_3.setBounds(66, 11, 46, 14);
-		contentPane.add(label_3);
+		JLabel lblImgClean1 = new JLabel("");
+		lblImgClean1.setIcon(new ImageIcon(TelaReceptor.class.getResource("/icones/clean.png")));
+		lblImgClean1.setBounds(66, 11, 46, 14);
+		contentPane.add(lblImgClean1);
 		
-		JLabel label_5 = new JLabel("");
-		label_5.setIcon(new ImageIcon(TelaReceptor.class.getResource("/icones/clean.png")));
-		label_5.setBounds(237, 11, 46, 14);
-		contentPane.add(label_5);
+		JLabel lblImgClean2 = new JLabel("");
+		lblImgClean2.setIcon(new ImageIcon(TelaReceptor.class.getResource("/icones/clean.png")));
+		lblImgClean2.setBounds(237, 11, 46, 14);
+		contentPane.add(lblImgClean2);
 		
-		JLabel label_6 = new JLabel("");
-		label_6.setHorizontalAlignment(SwingConstants.RIGHT);
-		label_6.setIcon(new ImageIcon(TelaReceptor.class.getResource("/icones/clean.png")));
-		label_6.setBounds(373, 11, 46, 14);
-		contentPane.add(label_6);
+		JLabel lblImgClean3 = new JLabel("");
+		lblImgClean3.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblImgClean3.setIcon(new ImageIcon(TelaReceptor.class.getResource("/icones/clean.png")));
+		lblImgClean3.setBounds(373, 11, 46, 14);
+		contentPane.add(lblImgClean3);
 		
 		JLabel lblListaDeArquivos = new JLabel("Lista de Arquivos Recebidos");
 		lblListaDeArquivos.setHorizontalAlignment(SwingConstants.CENTER);

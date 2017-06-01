@@ -54,13 +54,13 @@ public class JanelaEmissor extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setBounds(160, 231, 29, 29);
-		contentPane.add(lblNewLabel);
+		JLabel lblImgCronometro = new JLabel("New label");
+		lblImgCronometro.setBounds(160, 231, 29, 29);
+		contentPane.add(lblImgCronometro);
 		
 		try {
-			ImageIcon ic = new ImageIcon(ImageIO.read(JanelaEmissor.class.getResource("/icones/chronometer.png")).getScaledInstance(lblNewLabel.getWidth(), lblNewLabel.getHeight(), BufferedImage.SCALE_SMOOTH));
-			lblNewLabel.setIcon(ic);
+			ImageIcon ic = new ImageIcon(ImageIO.read(JanelaEmissor.class.getResource("/icones/chronometer.png")).getScaledInstance(lblImgCronometro.getWidth(), lblImgCronometro.getHeight(), BufferedImage.SCALE_SMOOTH));
+			lblImgCronometro.setIcon(ic);
 			
 			JLabel lblTitulo = new JLabel("Envio de Arquivos para o Receptor");
 			lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
@@ -77,18 +77,18 @@ public class JanelaEmissor extends JFrame {
 			iconeFalha.setBounds(288, 241, 46, 14);
 			contentPane.add(iconeFalha);
 			
-			JButton btnNewButton = new JButton("Enviar Arquivos");
-			btnNewButton.setFont(new Font("Meiryo", Font.BOLD, 12));
-			btnNewButton.addActionListener(new ActionListener() {
+			JButton btnEnviarArquivos = new JButton("Enviar Arquivos");
+			btnEnviarArquivos.setFont(new Font("Meiryo", Font.BOLD, 12));
+			btnEnviarArquivos.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 				}
 			});
-			btnNewButton.setBounds(164, 123, 136, 23);
-			contentPane.add(btnNewButton);
+			btnEnviarArquivos.setBounds(164, 123, 136, 23);
+			contentPane.add(btnEnviarArquivos);
 			
-			JFormattedTextField formattedTextField = new JFormattedTextField();
-			formattedTextField.setBounds(199, 240, 79, 20);
-			contentPane.add(formattedTextField);
+			JFormattedTextField ftfCronometro = new JFormattedTextField();
+			ftfCronometro.setBounds(199, 240, 79, 20);
+			contentPane.add(ftfCronometro);
 			MaskFormatter maskData = null;
 			try {
 				maskData = new MaskFormatter("##:##:####");
@@ -96,7 +96,7 @@ public class JanelaEmissor extends JFrame {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			maskData.install(formattedTextField);
+			maskData.install(ftfCronometro);
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
