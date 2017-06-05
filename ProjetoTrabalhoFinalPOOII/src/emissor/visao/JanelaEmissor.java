@@ -24,26 +24,8 @@ import javax.swing.JFormattedTextField;
 public class JanelaEmissor extends JFrame {
 
 	private JPanel contentPane;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					JanelaEmissor frame = new JanelaEmissor();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
+	private JButton btnEnviarArquivos;
+	
 	public JanelaEmissor() {
 		setResizable(false);
 		setTitle("Esta\u00E7\u00E3o Emissora");
@@ -77,12 +59,9 @@ public class JanelaEmissor extends JFrame {
 			iconeFalha.setBounds(288, 241, 46, 14);
 			contentPane.add(iconeFalha);
 			
-			JButton btnEnviarArquivos = new JButton("Enviar Arquivos");
+			btnEnviarArquivos = new JButton("Enviar Arquivos");
 			btnEnviarArquivos.setFont(new Font("Meiryo", Font.BOLD, 12));
-			btnEnviarArquivos.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-				}
-			});
+			
 			btnEnviarArquivos.setBounds(164, 123, 136, 23);
 			contentPane.add(btnEnviarArquivos);
 			
@@ -102,6 +81,14 @@ public class JanelaEmissor extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
 	}
+
+	public JButton getBtnEnviarArquivos() {
+		return btnEnviarArquivos;
+	}
+
+	public void setBtnEnviarArquivos(JButton btnEnviarArquivos) {
+		this.btnEnviarArquivos = btnEnviarArquivos;
+	}
+	
 }

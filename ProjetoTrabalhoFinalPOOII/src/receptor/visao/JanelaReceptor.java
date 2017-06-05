@@ -14,31 +14,17 @@ import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 
-public class TelaReceptor extends JFrame {
+public class JanelaReceptor extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
+	private DefaultTableModel modeloTabela;
+	
+	private JLabel lblImgOK1,lblImgOK2,lblImgOK3;
+	private JLabel lblImgClean1,lblImgClean2,lblImgClean3;
+	
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TelaReceptor frame = new TelaReceptor();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public TelaReceptor() {
+	public JanelaReceptor() {
 		setTitle("Esta\u00E7\u00E3o Receptora");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -54,26 +40,15 @@ public class TelaReceptor extends JFrame {
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
+				
 			},
 			new String[] {
 				"Nome do Arquivo", "Emissor"
 			}
 		));
+		modeloTabela = (DefaultTableModel) table.getModel();
+		
+
 		scrollPane.setViewportView(table);
 		
 		JLabel lblEmissor1 = new JLabel("Emissor 1");
@@ -91,35 +66,38 @@ public class TelaReceptor extends JFrame {
 		lblEmissor3.setBounds(350, 11, 69, 14);
 		contentPane.add(lblEmissor3);
 		
-		JLabel lblImgOK1 = new JLabel("");
-		lblImgOK1.setIcon(new ImageIcon(TelaReceptor.class.getResource("/icones/ok1.png")));
+		lblImgOK1 = new JLabel("");
+		lblImgOK1.setIcon(new ImageIcon(JanelaReceptor.class.getResource("/icones/ok1.png")));
 		lblImgOK1.setBounds(66, 11, 46, 14);
 		contentPane.add(lblImgOK1);
+		lblImgOK1.setVisible(false);
 		
-		JLabel lblImgOK2 = new JLabel("");
-		lblImgOK2.setIcon(new ImageIcon(TelaReceptor.class.getResource("/icones/ok1.png")));
+		lblImgOK2 = new JLabel("");
+		lblImgOK2.setIcon(new ImageIcon(JanelaReceptor.class.getResource("/icones/ok1.png")));
 		lblImgOK2.setBounds(237, 11, 46, 14);
 		contentPane.add(lblImgOK2);
+		lblImgOK2.setVisible(false);
 		
-		JLabel lblImgOK3 = new JLabel("");
+		lblImgOK3 = new JLabel("");
 		lblImgOK3.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblImgOK3.setIcon(new ImageIcon(TelaReceptor.class.getResource("/icones/ok1.png")));
+		lblImgOK3.setIcon(new ImageIcon(JanelaReceptor.class.getResource("/icones/ok1.png")));
 		lblImgOK3.setBounds(373, 11, 46, 14);
 		contentPane.add(lblImgOK3);
+		lblImgOK3.setVisible(false);
 		
-		JLabel lblImgClean1 = new JLabel("");
-		lblImgClean1.setIcon(new ImageIcon(TelaReceptor.class.getResource("/icones/clean.png")));
+		lblImgClean1 = new JLabel("");
+		lblImgClean1.setIcon(new ImageIcon(JanelaReceptor.class.getResource("/icones/clean.png")));
 		lblImgClean1.setBounds(66, 11, 46, 14);
 		contentPane.add(lblImgClean1);
 		
-		JLabel lblImgClean2 = new JLabel("");
-		lblImgClean2.setIcon(new ImageIcon(TelaReceptor.class.getResource("/icones/clean.png")));
+		lblImgClean2 = new JLabel("");
+		lblImgClean2.setIcon(new ImageIcon(JanelaReceptor.class.getResource("/icones/clean.png")));
 		lblImgClean2.setBounds(237, 11, 46, 14);
 		contentPane.add(lblImgClean2);
 		
-		JLabel lblImgClean3 = new JLabel("");
+		lblImgClean3 = new JLabel("");
 		lblImgClean3.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblImgClean3.setIcon(new ImageIcon(TelaReceptor.class.getResource("/icones/clean.png")));
+		lblImgClean3.setIcon(new ImageIcon(JanelaReceptor.class.getResource("/icones/clean.png")));
 		lblImgClean3.setBounds(373, 11, 46, 14);
 		contentPane.add(lblImgClean3);
 		
@@ -128,4 +106,38 @@ public class TelaReceptor extends JFrame {
 		lblListaDeArquivos.setBounds(55, 36, 325, 14);
 		contentPane.add(lblListaDeArquivos);
 	}
+
+	public DefaultTableModel getModeloTabela() {
+		return modeloTabela;
+	}
+
+	public void setModeloTabela(DefaultTableModel modeloTabela) {
+		this.modeloTabela = modeloTabela;
+	}
+
+	public JLabel getLblImgOK1() {
+		return lblImgOK1;
+	}
+
+	public JLabel getLblImgOK2() {
+		return lblImgOK2;
+	}
+
+	public JLabel getLblImgOK3() {
+		return lblImgOK3;
+	}
+
+	public JLabel getLblImgClean1() {
+		return lblImgClean1;
+	}
+
+	public JLabel getLblImgClean2() {
+		return lblImgClean2;
+	}
+
+	public JLabel getLblImgClean3() {
+		return lblImgClean3;
+	}
+	
+	
 }
