@@ -20,11 +20,13 @@ import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JFormattedTextField;
+import javax.swing.JTextField;
 
 public class JanelaEmissor extends JFrame {
 
 	private JPanel contentPane;
 	private JButton btnEnviarArquivos;
+	private JButton btnAlterarDiretorio;
 	
 	public JanelaEmissor() {
 		setResizable(false);
@@ -77,6 +79,11 @@ public class JanelaEmissor extends JFrame {
 			}
 			maskData.install(ftfCronometro);
 			
+			btnAlterarDiretorio = new JButton("Diret\u00F3rio");
+			
+			btnAlterarDiretorio.setBounds(189, 89, 89, 23);
+			contentPane.add(btnAlterarDiretorio);
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -90,5 +97,10 @@ public class JanelaEmissor extends JFrame {
 	public void setBtnEnviarArquivos(JButton btnEnviarArquivos) {
 		this.btnEnviarArquivos = btnEnviarArquivos;
 	}
+
+	public JButton getBtnAlterarDiretorio() {
+		return btnAlterarDiretorio;
+	}
+	
 	
 }
