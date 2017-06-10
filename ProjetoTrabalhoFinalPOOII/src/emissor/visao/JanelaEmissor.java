@@ -26,7 +26,7 @@ public class JanelaEmissor extends JFrame {
 
 	private JPanel contentPane;
 	private JButton btnEnviarArquivos;
-	private JButton btnAlterarDiretorio;
+	private JTextField tfIP;
 	
 	public JanelaEmissor() {
 		setResizable(false);
@@ -64,7 +64,7 @@ public class JanelaEmissor extends JFrame {
 			btnEnviarArquivos = new JButton("Enviar Arquivos");
 			btnEnviarArquivos.setFont(new Font("Meiryo", Font.BOLD, 12));
 			
-			btnEnviarArquivos.setBounds(164, 123, 136, 23);
+			btnEnviarArquivos.setBounds(161, 98, 136, 23);
 			contentPane.add(btnEnviarArquivos);
 			
 			JFormattedTextField ftfCronometro = new JFormattedTextField();
@@ -79,10 +79,14 @@ public class JanelaEmissor extends JFrame {
 			}
 			maskData.install(ftfCronometro);
 			
-			btnAlterarDiretorio = new JButton("Diret\u00F3rio");
+			tfIP = new JTextField();
+			tfIP.setBounds(184, 135, 113, 20);
+			contentPane.add(tfIP);
+			tfIP.setColumns(10);
 			
-			btnAlterarDiretorio.setBounds(189, 89, 89, 23);
-			contentPane.add(btnAlterarDiretorio);
+			JLabel lblIp = new JLabel("IP:");
+			lblIp.setBounds(160, 138, 14, 14);
+			contentPane.add(lblIp);
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -98,9 +102,7 @@ public class JanelaEmissor extends JFrame {
 		this.btnEnviarArquivos = btnEnviarArquivos;
 	}
 
-	public JButton getBtnAlterarDiretorio() {
-		return btnAlterarDiretorio;
+	public JTextField getTfIP() {
+		return tfIP;
 	}
-	
-	
 }

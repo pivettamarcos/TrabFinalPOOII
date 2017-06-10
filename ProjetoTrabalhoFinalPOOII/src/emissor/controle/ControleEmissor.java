@@ -21,7 +21,6 @@ import emissor.visao.JanelaEmissor;
 public class ControleEmissor extends Thread{
 	private JanelaEmissor je;
 	private JButton btnEnviarArquivos;
-	private JButton btnAlterarDiretório;
 	private LinkedList<String> nomesArquivos;
 	private String diretorioImagens;
 	private boolean estaRodando;
@@ -31,10 +30,9 @@ public class ControleEmissor extends Thread{
 	
 
 	
-	public ControleEmissor(JanelaEmissor je, JButton btnEnviarArquivos, JButton btnAlterarDiretorio){
+	public ControleEmissor(JanelaEmissor je, JButton btnEnviarArquivos){
 		this.je = je;
 		this.btnEnviarArquivos = btnEnviarArquivos;
-		this.btnAlterarDiretório = btnAlterarDiretorio;
 		this.nomesArquivos = new LinkedList<String>();
 		this.estaRodando = false;
 		
@@ -44,6 +42,8 @@ public class ControleEmissor extends Thread{
 	public void inicializaActionListeners(){
 		btnEnviarArquivos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				nomesArquivos.removeAll(new LinkedList<String>());
+				
 				JFileChooser arquivo = new JFileChooser(); 
 				arquivo.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				arquivo.showOpenDialog(null);  
@@ -55,7 +55,7 @@ public class ControleEmissor extends Thread{
 					
 					Socket socket = null;
 					try {
-						socket = new Socket("localhost", 2222);
+						socket = new Socket(je.getTfIP().getText(), 2222);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -79,7 +79,7 @@ public class ControleEmissor extends Thread{
 		JanelaEmissor je = new JanelaEmissor();
 		je.setVisible(true);
 		
-		ControleEmissor ce = new ControleEmissor(je, je.getBtnEnviarArquivos(), je.getBtnAlterarDiretorio());
+		ControleEmissor ce = new ControleEmissor(je, je.getBtnEnviarArquivos());
 	}
 
 	private void inicializaNumArquivos(){
