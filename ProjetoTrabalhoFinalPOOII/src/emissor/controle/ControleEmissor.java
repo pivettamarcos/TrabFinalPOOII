@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -25,6 +26,8 @@ public class ControleEmissor extends Thread{
 	private String diretorioImagens;
 	private boolean estaRodando;
 	private int numArquivosAtual;
+	private Thread threadEnvio;
+	private Thread threadRecebimento;
 	
 
 	
@@ -49,15 +52,22 @@ public class ControleEmissor extends Thread{
 					estaRodando = true;
 					inicializaNumArquivos();
 					populaArrayNomeArquivos();
-					estabeleceConexao();
 					
-					new Thread() {
-						public void run() {
-							while(true){
-								checaNumArquivos(je);
-							}
-						}
-					}.start();
+					Socket socket = null;
+					try {
+						socket = new Socket("localhost", 2222);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+					Thread threadEnvio = new Thread(new ThreadEnvio(socket, nomesArquivos));
+					threadEnvio.start();
+					
+					Thread threadAlteracao = new Thread(new ThreadAlteracao(je, diretorioImagens, numArquivosAtual));
+					threadAlteracao.start();
+					
+					Thread threadRecebimento = new Thread(new ThreadRecebimento(socket));
+					threadRecebimento.start();		
 				}else{
 					JOptionPane.showMessageDialog(null,"Diretório inválido");
 				}
@@ -71,31 +81,7 @@ public class ControleEmissor extends Thread{
 		
 		ControleEmissor ce = new ControleEmissor(je, je.getBtnEnviarArquivos(), je.getBtnAlterarDiretorio());
 	}
-	
-	private void checaNumArquivos(JanelaEmissor je){
-		int cont = 0;
-		File diretorio = new File(diretorioImagens);
-		File[] arquivos = diretorio.listFiles();
 
-	    for (int i = 0; i < arquivos.length; i++) {
-			  if (arquivos[i].isFile()) {
-				  cont++;
-			  }
-	    }	
-	    if(cont > numArquivosAtual){
-	    	JOptionPane.showMessageDialog(je,"Algum arquivo foi adicionado no diretório\n"
-	    			+ "Nº arquivo(s) adicionado(s): "+ (cont - numArquivosAtual)+
-	    			"\nNº arquivos atual: "+ cont, "Alteração no diretório" , JOptionPane.INFORMATION_MESSAGE);
-	    	numArquivosAtual = cont;
-	    }else if(cont < numArquivosAtual){
-	    	JOptionPane.showMessageDialog(je,"Algum arquivo foi removido do diretório\n"
-	    			+ "Nº arquivo(s) reeovido(s): "+ (numArquivosAtual - cont)+
-	    			"\nNº arquivos atual: "+ cont, "Alteração no diretório" , JOptionPane.INFORMATION_MESSAGE);
-	    	numArquivosAtual = cont;
-	    }
-	    	
-	}
-	
 	private void inicializaNumArquivos(){
 		int cont = 0;
 		File diretorio = new File(diretorioImagens);
@@ -119,24 +105,5 @@ public class ControleEmissor extends Thread{
 				  nomesArquivos.add(arquivos[i].getName());
 			  }
 	    }
-	}
-	
-	private void estabeleceConexao(){
-		try {
-			ServerSocket server = new ServerSocket(1234);
-			System.out.println("[Servindo o nome dos arquivos]");
-
-			Socket cliente = server.accept();
-				
-			ObjectOutputStream out = new ObjectOutputStream(cliente.getOutputStream());
-			out.writeObject(nomesArquivos);  
-
-			System.out.println("[Envio encerrado]");
-			cliente.close();
-			server.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
 	}
 }

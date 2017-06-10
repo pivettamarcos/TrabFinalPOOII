@@ -22,9 +22,13 @@ import receptor.visao.JanelaReceptor;
 public class ControleReceptor {
 	private JanelaReceptor jr;
 	private int contEmissores;
+	private LinkedList<Socket> clientes;
+	private ServerSocket serverSocket;
 	
-	public ControleReceptor(JanelaReceptor jr){
+	public ControleReceptor(JanelaReceptor jr, ServerSocket serverSocket){
+		clientes = new LinkedList<Socket>();
 		contEmissores = 0;
+		this.serverSocket = serverSocket;
 		this.jr = jr;
 	}
 
@@ -32,17 +36,41 @@ public class ControleReceptor {
 		JanelaReceptor jr = new JanelaReceptor();
 		jr.setVisible(true);
 		
-		ControleReceptor ce = new ControleReceptor(jr);
-		while(true)
-			ce.estabeleceConexao();
+		ControleReceptor ce = null;
+		try {
+			ce = new ControleReceptor(jr, new ServerSocket(2222));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}	
+		ce.conecta();
+		
 	}
 	
-	private void estabeleceConexao(){
-		try {
-			Socket receptor = new Socket("localhost", 1234);
+	private void conecta(){
+		
+		Thread conecta = new Thread(new Runnable() {
+	         public void run()
+	         {
+	        	Socket cliente = null;
+	     		try {
+	     			cliente = serverSocket.accept();
+	     			conecta();
+	     		} catch (IOException e) {
+	     			e.printStackTrace();
+	     		}
+	     		
+	     		estabeleceConexao(cliente);
+	         }
+		});
+		
+		conecta.start();
+	}
+	
+	private void estabeleceConexao(Socket emissor){
+		try {			
 			System.out.println("[Recebendo servidor 1]");
 				
-			ObjectInputStream in = new ObjectInputStream(receptor.getInputStream());
+			ObjectInputStream in = new ObjectInputStream(emissor.getInputStream());
 			LinkedList<String> nomesArquivos = new LinkedList<String>();
 			
 			try {
@@ -68,9 +96,12 @@ public class ControleReceptor {
 			}
 			
 			contEmissores++;
+			
+			ObjectOutputStream out = new ObjectOutputStream(emissor.getOutputStream());
+			out.writeObject("[Envio feito com sucesso]");  
 
-			System.out.println("[Recebimento finalizado]");
-			receptor.close();
+			System.out.println("[Envio feito com sucesso]");
+			emissor.close();
 		} catch (IOException e) {
 			System.out.println("teste");
 		}
