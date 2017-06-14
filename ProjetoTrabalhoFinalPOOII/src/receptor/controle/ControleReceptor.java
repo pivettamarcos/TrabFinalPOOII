@@ -69,7 +69,6 @@ public class ControleReceptor {
 	private void estabeleceConexao(Socket emissor){
 		try {			
 			System.out.println("[Recebendo servidor 1]");
-				
 			ObjectInputStream in = new ObjectInputStream(emissor.getInputStream());
 			LinkedList<String> nomesArquivos = new LinkedList<String>();
 			

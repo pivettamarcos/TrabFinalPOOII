@@ -32,12 +32,12 @@ public class ThreadAlteracao implements Runnable{
 		    if(cont > numArquivosAtual){
 		    	JOptionPane.showMessageDialog(je,"Algum arquivo foi adicionado no diretório\n"
 		    			+ "Nº arquivo(s) adicionado(s): "+ (cont - numArquivosAtual)+
-		    			"\nNº arquivos atual: "+ cont, "Alteração no diretório" , JOptionPane.INFORMATION_MESSAGE);
+		    			"\nNº arquivos atual: "+ cont, "Alteração no diretório " , JOptionPane.INFORMATION_MESSAGE);
 		    	numArquivosAtual = cont;
 		    }else if(cont < numArquivosAtual){
 		    	JOptionPane.showMessageDialog(je,"Algum arquivo foi removido do diretório\n"
 		    			+ "Nº arquivo(s) removido(s): "+ (numArquivosAtual - cont)+
-		    			"\nNº arquivos atual: "+ cont, "Alteração no diretório" , JOptionPane.INFORMATION_MESSAGE);
+		    			"\nNº arquivos atual: "+ cont, "Alteração no diretório " , JOptionPane.INFORMATION_MESSAGE);
 		    	numArquivosAtual = cont;
 		    }
 		}

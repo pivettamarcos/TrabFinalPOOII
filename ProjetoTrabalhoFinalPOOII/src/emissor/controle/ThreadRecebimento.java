@@ -21,6 +21,7 @@ public class ThreadRecebimento implements Runnable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		LinkedList<String> nomesArquivos = new LinkedList<String>();
 		
 		try {

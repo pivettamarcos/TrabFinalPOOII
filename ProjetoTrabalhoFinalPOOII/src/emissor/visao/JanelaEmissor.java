@@ -38,7 +38,7 @@ public class JanelaEmissor extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblImgCronometro = new JLabel("New label");
+		JLabel lblImgCronometro = new JLabel("cronometro");
 		lblImgCronometro.setBounds(160, 231, 29, 29);
 		contentPane.add(lblImgCronometro);
 		

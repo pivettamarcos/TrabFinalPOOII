@@ -40,7 +40,6 @@ public class JanelaReceptor extends JFrame {
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				
 			},
 			new String[] {
 				"Nome do Arquivo", "Emissor"

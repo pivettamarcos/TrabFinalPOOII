@@ -35,7 +35,6 @@ public class ControleEmissor extends Thread{
 		this.btnEnviarArquivos = btnEnviarArquivos;
 		this.nomesArquivos = new LinkedList<String>();
 		this.estaRodando = false;
-		
 		inicializaActionListeners();
 	}
 	

@@ -20,7 +20,6 @@ public class ThreadEnvio implements Runnable{
 	public void run() {
 		try {			
 			System.out.println("[Servindo o nome dos arquivos]");
-				
 			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 			out.writeObject(nomesArquivos);  
 			System.out.println(nomesArquivos);
