@@ -21,19 +21,23 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JFormattedTextField;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import java.awt.Color;
 
+// Janela na qual o usuário irá selecionar os arquivos cujos nomes serão enviados
 public class JanelaEmissor extends JFrame {
-
 	private JPanel contentPane;
 	private JButton btnEnviarArquivos;
 	private JTextField tfIP;
 	
+	// construtor com os componentes e comportamentos da janela de emissão
 	public JanelaEmissor() {
 		setResizable(false);
 		setTitle("Esta\u00E7\u00E3o Emissora");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(144, 238, 144));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -47,8 +51,9 @@ public class JanelaEmissor extends JFrame {
 			lblImgCronometro.setIcon(ic);
 			
 			JLabel lblTitulo = new JLabel("Envio de Arquivos para o Receptor");
+			lblTitulo.setFont(new Font("Tahoma", Font.BOLD, 14));
 			lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-			lblTitulo.setBounds(128, 11, 211, 14);
+			lblTitulo.setBounds(96, 11, 249, 29);
 			contentPane.add(lblTitulo);
 			
 			JLabel iconeEnviado = new JLabel("");
@@ -62,9 +67,9 @@ public class JanelaEmissor extends JFrame {
 			contentPane.add(iconeFalha);
 			
 			btnEnviarArquivos = new JButton("Enviar Arquivos");
-			btnEnviarArquivos.setFont(new Font("Meiryo", Font.BOLD, 12));
+			btnEnviarArquivos.setFont(new Font("Dialog", Font.BOLD, 12));
 			
-			btnEnviarArquivos.setBounds(161, 98, 136, 23);
+			btnEnviarArquivos.setBounds(161, 98, 151, 23);
 			contentPane.add(btnEnviarArquivos);
 			
 			JFormattedTextField ftfCronometro = new JFormattedTextField();
@@ -74,7 +79,6 @@ public class JanelaEmissor extends JFrame {
 			try {
 				maskData = new MaskFormatter("##:##:####");
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			maskData.install(ftfCronometro);
@@ -89,11 +93,11 @@ public class JanelaEmissor extends JFrame {
 			contentPane.add(lblIp);
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	// getters e setters para referenciar os componentes gráficos no controle
 	public JButton getBtnEnviarArquivos() {
 		return btnEnviarArquivos;
 	}
@@ -105,4 +109,5 @@ public class JanelaEmissor extends JFrame {
 	public JTextField getTfIP() {
 		return tfIP;
 	}
+	
 }
