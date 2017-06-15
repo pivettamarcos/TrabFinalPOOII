@@ -19,12 +19,14 @@ import javax.swing.table.DefaultTableModel;
 
 import receptor.visao.JanelaReceptor;
 
+//Classe de controle da recepção de arquivos
 public class ControleReceptor {
 	private JanelaReceptor jr;
 	private int contEmissores;
 	private LinkedList<Socket> clientes;
 	private ServerSocket serverSocket;
 	
+	// construtor da classe
 	public ControleReceptor(JanelaReceptor jr, ServerSocket serverSocket){
 		clientes = new LinkedList<Socket>();
 		contEmissores = 0;
@@ -32,9 +34,11 @@ public class ControleReceptor {
 		this.jr = jr;
 	}
 
+	// método main do receptor
 	public static void main(String[] args) {
 		JanelaReceptor jr = new JanelaReceptor();
 		jr.setVisible(true);
+		jr.setLocationRelativeTo(null);
 		
 		ControleReceptor ce = null;
 		try {
@@ -46,11 +50,10 @@ public class ControleReceptor {
 		
 	}
 	
+	// método com Thread interna para realizar a conexão
 	private void conecta(){
-		
 		Thread conecta = new Thread(new Runnable() {
-	         public void run()
-	         {
+	         public void run() {
 	        	Socket cliente = null;
 	     		try {
 	     			cliente = serverSocket.accept();
@@ -58,14 +61,13 @@ public class ControleReceptor {
 	     		} catch (IOException e) {
 	     			e.printStackTrace();
 	     		}
-	     		
 	     		estabeleceConexao(cliente);
 	         }
 		});
-		
 		conecta.start();
 	}
 	
+	// estabelece conexão, recebendo os nomes dos arquivos
 	private void estabeleceConexao(Socket emissor){
 		try {			
 			System.out.println("[Recebendo servidor 1]");
@@ -80,19 +82,7 @@ public class ControleReceptor {
 			
 			adicionaNomesATabela(nomesArquivos, contEmissores);
 			
-			switch(contEmissores){
-				case 0:
-					jr.getLblImgClean1().setVisible(false);
-					jr.getLblImgOK1().setVisible(true);
-				break;
-				case 1:
-					jr.getLblImgClean2().setVisible(false);
-					jr.getLblImgOK2().setVisible(true);
-				break;
-				case 2:
-					jr.getLblImgClean3().setVisible(false);
-					jr.getLblImgOK3().setVisible(true);
-			}
+			verificaQualEmissor();
 			
 			contEmissores++;
 			
@@ -106,9 +96,27 @@ public class ControleReceptor {
 		}
 	}
 	
+	// adiciona os nomes dos arquivos na tabela 
 	private void adicionaNomesATabela(LinkedList<String> nomesArquivos, int contEmissores){
 		for (int i = 0; i < nomesArquivos.size(); i++) {
 			jr.getModeloTabela().addRow(new Object[]{nomesArquivos.get(i), contEmissores + 1});
 	    }
+	}
+	
+	// verifica qual emissor enviou os arquivos (1º a enviar é o 1, 2º a enviar é o 2 e 3º a enviar é o 3)
+	public void verificaQualEmissor() {
+		switch(contEmissores){
+		case 0:
+			jr.getLblImgClean1().setVisible(false);
+			jr.getLblImgOK1().setVisible(true);
+		break;
+		case 1:
+			jr.getLblImgClean2().setVisible(false);
+			jr.getLblImgOK2().setVisible(true);
+		break;
+		case 2:
+			jr.getLblImgClean3().setVisible(false);
+			jr.getLblImgOK3().setVisible(true);
+		}
 	}
 }
