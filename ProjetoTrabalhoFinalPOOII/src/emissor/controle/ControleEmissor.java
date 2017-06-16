@@ -145,7 +145,8 @@ public class ControleEmissor extends Thread{
 	
 	public void terminarSocket(){
 		try {
-			oos.writeObject("KILL");
+			if(socket != null)
+				oos.writeObject("KILL");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
