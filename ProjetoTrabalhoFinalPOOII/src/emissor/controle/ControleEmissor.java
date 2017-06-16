@@ -29,6 +29,7 @@ public class ControleEmissor extends Thread{
 	private Thread threadEnvio;
 	private Thread threadRecebimento;
 	private Socket socket;
+	private ObjectOutputStream oos;
 	
 	// construtor da classe
 	public ControleEmissor(JanelaEmissor je, JButton btnEnviarArquivos){
@@ -36,6 +37,7 @@ public class ControleEmissor extends Thread{
 		this.btnEnviarArquivos = btnEnviarArquivos;
 		this.nomesArquivos = new LinkedList<String>(); 
 		this.estaRodando = false;
+		
 		inicializaActionListeners();
 	}
 	
@@ -43,10 +45,20 @@ public class ControleEmissor extends Thread{
 	public void inicializaActionListeners(){
 		btnEnviarArquivos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				nomesArquivos.removeAll(new LinkedList<String>());
+				if(nomesArquivos != null)
+					nomesArquivos.clear();
 				abreDiretorio();
+				//btnEnviarArquivos.setEnabled(false);
 			}
 		});
+		
+		je.addWindowListener(new java.awt.event.WindowAdapter() {
+		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		        terminarSocket();
+		    }
+		});
+		
+		
 	}
 	
 	// método main do emissor
@@ -110,17 +122,33 @@ public class ControleEmissor extends Thread{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		try {
+			oos = new ObjectOutputStream(socket.getOutputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	// chama as threads necessárias para a execução concorrente do envio, da alteração e do recebimento dos dados
 	public void chamaThreads() {
-		Thread threadEnvio = new Thread(new ThreadEnvio(socket, nomesArquivos));
+		Thread threadEnvio = new Thread(new ThreadEnvio(oos, nomesArquivos));
 		threadEnvio.start();
 		
-		Thread threadAlteracao = new Thread(new ThreadAlteracao(je, diretorioImagens, numArquivosAtual));
+		Thread threadAlteracao = new Thread(new ThreadAlteracao(oos, je, diretorioImagens, numArquivosAtual));
 		threadAlteracao.start();
 		
-		Thread threadRecebimento = new Thread(new ThreadRecebimento(socket));
+		Thread threadRecebimento = new Thread(new ThreadRecebimento(socket, je));
 		threadRecebimento.start();		
+	}
+	
+	public void terminarSocket(){
+		try {
+			oos.writeObject("KILL");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
 	}
 }

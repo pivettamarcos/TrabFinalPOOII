@@ -10,12 +10,12 @@ import java.util.LinkedList;
 //Classe com lógica do fluxo de execução responsável por enviar os nomes dos arquivos
 public class ThreadEnvio implements Runnable{
 	LinkedList<String> nomesArquivos;
-	private Socket socket;
+	private ObjectOutputStream oos;
 	
 	// construtor da Thread
-	public ThreadEnvio(Socket socket, LinkedList<String> nomesArquivos) {
+	public ThreadEnvio(ObjectOutputStream oos, LinkedList<String> nomesArquivos) {
 		super();
-		this.socket = socket;
+		this.oos = oos;
 		this.nomesArquivos = nomesArquivos;
 	}
 
@@ -28,8 +28,7 @@ public class ThreadEnvio implements Runnable{
 	public void enviaArquivos() {
 		try {			
 			System.out.println("[Servindo o nome dos arquivos]");
-			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-			out.writeObject(nomesArquivos);  
+			oos.writeObject(nomesArquivos);  
 			System.out.println(nomesArquivos);
 
 			System.out.println("[Envio encerrado]");

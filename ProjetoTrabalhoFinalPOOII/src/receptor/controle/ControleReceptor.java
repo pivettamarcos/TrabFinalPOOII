@@ -15,6 +15,7 @@ import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import receptor.visao.JanelaReceptor;
@@ -52,25 +53,29 @@ public class ControleReceptor {
 	
 	// método com Thread interna para realizar a conexão
 	private void conecta(){
-		Thread conecta = new Thread(new Runnable() {
-	         public void run() {
-	        	Socket cliente = null;
-	     		try {
-	     			cliente = serverSocket.accept();
-	     			conecta();
-	     		} catch (IOException e) {
-	     			e.printStackTrace();
-	     		}
-	     		estabeleceConexao(cliente);
-	         }
-		});
-		conecta.start();
+		if(clientes.size() < 3){
+			Thread conecta = new Thread(new Runnable() {
+		         public void run() {
+		        	Socket cliente = null;
+		     		try {
+		     			cliente = serverSocket.accept();
+		     			clientes.add(cliente);
+		     			
+		     			conecta();
+		     		} catch (IOException e) {
+		     			e.printStackTrace();
+		     		}
+		     		estabeleceConexao(clientes.size(),cliente);
+		         }
+			});
+			conecta.start();
+		}
 	}
 	
 	// estabelece conexão, recebendo os nomes dos arquivos
-	private void estabeleceConexao(Socket emissor){
-		try {			
-			System.out.println("[Recebendo servidor 1]");
+	private void estabeleceConexao(int numEmissor, Socket emissor){
+		try {		
+			System.out.println("[Conexão do emissor "+ clientes.size() +"]");
 			ObjectInputStream in = new ObjectInputStream(emissor.getInputStream());
 			LinkedList<String> nomesArquivos = new LinkedList<String>();
 			
@@ -80,6 +85,8 @@ public class ControleReceptor {
 				e.printStackTrace();
 			}
 			
+			System.out.println(nomesArquivos);
+			
 			adicionaNomesATabela(nomesArquivos, contEmissores);
 			
 			verificaQualEmissor();
@@ -87,12 +94,23 @@ public class ControleReceptor {
 			contEmissores++;
 			
 			ObjectOutputStream out = new ObjectOutputStream(emissor.getOutputStream());
-			out.writeObject("[Envio feito com sucesso]");  
+			out.writeObject("Envio feito com sucesso");  
 
 			System.out.println("[Envio feito com sucesso]");
-			emissor.close();
+			
+			while(true){
+				String msg = (String)in.readObject();
+				if(msg.equals("KILL"))
+					emissor.close();
+				else
+					JOptionPane.showMessageDialog(jr, msg +numEmissor, "Atenção", JOptionPane.WARNING_MESSAGE);
+			}
+			
 		} catch (IOException e) {
-			System.out.println("teste");
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -105,18 +123,18 @@ public class ControleReceptor {
 	
 	// verifica qual emissor enviou os arquivos (1º a enviar é o 1, 2º a enviar é o 2 e 3º a enviar é o 3)
 	public void verificaQualEmissor() {
-		switch(contEmissores){
-		case 0:
-			jr.getLblImgClean1().setVisible(false);
-			jr.getLblImgOK1().setVisible(true);
-		break;
-		case 1:
-			jr.getLblImgClean2().setVisible(false);
-			jr.getLblImgOK2().setVisible(true);
-		break;
-		case 2:
-			jr.getLblImgClean3().setVisible(false);
-			jr.getLblImgOK3().setVisible(true);
+		switch(clientes.size()){
+			case 1:
+				jr.getLblImgClean1().setVisible(false);
+				jr.getLblImgOK1().setVisible(true);
+			break;
+			case 2:
+				jr.getLblImgClean2().setVisible(false);
+				jr.getLblImgOK2().setVisible(true);
+			break;
+			case 3:
+				jr.getLblImgClean3().setVisible(false);
+				jr.getLblImgOK3().setVisible(true);
 		}
 	}
 }

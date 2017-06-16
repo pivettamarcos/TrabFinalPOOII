@@ -23,6 +23,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import java.awt.Color;
+import java.awt.SystemColor;
 
 // Janela na qual o usuário irá selecionar os arquivos cujos nomes serão enviados
 public class JanelaEmissor extends JFrame {
@@ -37,7 +38,7 @@ public class JanelaEmissor extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(144, 238, 144));
+		contentPane.setBackground(SystemColor.control);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);

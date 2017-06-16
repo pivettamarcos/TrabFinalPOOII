@@ -30,7 +30,7 @@ public class JanelaReceptor extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 528, 503);
 		contentPane = new JPanel();
-		contentPane.setBackground(SystemColor.inactiveCaption);
+		contentPane.setBackground(SystemColor.control);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);

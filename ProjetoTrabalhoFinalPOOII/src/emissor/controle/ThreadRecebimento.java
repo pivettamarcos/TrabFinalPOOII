@@ -5,14 +5,20 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.LinkedList;
 
+import javax.swing.JOptionPane;
+
+import emissor.visao.JanelaEmissor;
+
 //Classe com lógica do fluxo de execução responsável por receber os arquivos do diretório
 public class ThreadRecebimento implements Runnable{
 	private Socket socket;
+	private JanelaEmissor je;
 	
 	// construtor da Thread
-	public ThreadRecebimento(Socket socket) {
+	public ThreadRecebimento(Socket socket, JanelaEmissor je) {
 		super();
 		this.socket = socket;
+		this.je = je;
 	}
 
 	// método de execução da Thread
@@ -32,7 +38,8 @@ public class ThreadRecebimento implements Runnable{
 		LinkedList<String> nomesArquivos = new LinkedList<String>();
 		
 		try {
-			System.out.println((String)in.readObject());
+			JOptionPane.showMessageDialog(je,(String)in.readObject());
+
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
