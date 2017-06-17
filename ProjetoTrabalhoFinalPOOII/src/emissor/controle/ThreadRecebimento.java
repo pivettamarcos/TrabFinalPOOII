@@ -3,7 +3,6 @@ package emissor.controle;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
-import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
@@ -29,19 +28,12 @@ public class ThreadRecebimento implements Runnable{
 	// recebe os arquivos com a utilização da classe ObjectInputStream e do método readObject
 	public void recebeArquivos() {
 		ObjectInputStream in = null;
+
 		try {
 			in = new ObjectInputStream(socket.getInputStream());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		LinkedList<String> nomesArquivos = new LinkedList<String>();
-		
-		try {
-			JOptionPane.showMessageDialog(je,(String)in.readObject());
-
+			JOptionPane.showMessageDialog(je,(String)in.readObject(), "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(je,"Erro ao enviar os arquivos", "Erro", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	

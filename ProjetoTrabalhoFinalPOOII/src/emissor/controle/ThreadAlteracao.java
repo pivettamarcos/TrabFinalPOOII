@@ -3,7 +3,6 @@ package emissor.controle;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 
 import javax.swing.JOptionPane;
 
@@ -15,6 +14,7 @@ public class ThreadAlteracao implements Runnable{
 	private JanelaEmissor je;
 	private String diretorioImagens;
 	private int numArquivosAtual;
+	private int cont;
 	
 	// construtor da Thread
 	public ThreadAlteracao(ObjectOutputStream oos, JanelaEmissor je, String diretorioImagens, int numArquivosAtual) {
@@ -34,7 +34,7 @@ public class ThreadAlteracao implements Runnable{
 	
 	// conta os arquivos, armazenando em cont e comparando com número de arquivos atual
 	public void verificaAlteracao() {
-		int cont = 0;
+		cont = 0;
 		File diretorio = new File(diretorioImagens);
 		File[] arquivos = diretorio.listFiles();
 
@@ -47,9 +47,10 @@ public class ThreadAlteracao implements Runnable{
 	    try {
 			Thread.sleep(500);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+	    
+	    final int threadCont = cont;
 	    
 	    if(cont > numArquivosAtual){
 	    	
@@ -58,17 +59,28 @@ public class ThreadAlteracao implements Runnable{
 	    			+ "Nº arquivo(s) adicionado(s): "+ (cont - numArquivosAtual)+
 	    			"\nNº arquivos atual: "+ cont + "\n Emissor:");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}  
 	    	
-	    	JOptionPane.showMessageDialog(je, "Algum arquivo foi adicionado no diretório\n"
-	    			+ "Nº arquivo(s) adicionado(s): "+ (cont - numArquivosAtual)+
-	    			"\nNº arquivos atual: "+ cont, "Atenção", JOptionPane.WARNING_MESSAGE);
+	    	new Thread(new Runnable(){
+	    		private int cont;
+	    		private int numArquivosAtual;
+	    		
+	    		public Runnable init(int cont, int numArquivosAtual) {
+	    	        this.cont = cont;
+	    	        this.numArquivosAtual = numArquivosAtual;
+	    	        return this;
+	    	    }
+	    		
+	            public void run(){
+	            	JOptionPane.showMessageDialog(je, "Algum arquivo foi adicionado no diretório\n"
+	    	    			+ "Nº arquivo(s) adicionado(s): "+ (threadCont - numArquivosAtual)+
+	    	    			"\nNº arquivos atual: "+ cont, "Atenção", JOptionPane.WARNING_MESSAGE);
+	            }
+	        }.init(cont, numArquivosAtual)).start();
 	    	
 	    	numArquivosAtual = cont;
 	    }else if(cont < numArquivosAtual){
-	    	
 	    	try {
 				oos.writeObject("Algum arquivo foi removido do diretório\n"
 	    			+ "Nº arquivo(s) removido(s): "+ (numArquivosAtual - cont)+
@@ -78,9 +90,22 @@ public class ThreadAlteracao implements Runnable{
 				e.printStackTrace();
 			}  
 	    	
-	    	JOptionPane.showMessageDialog(je, "Algum arquivo foi removido do diretório\n"
-	    			+ "Nº arquivo(s) removido(s): "+ (numArquivosAtual - cont)+
-	    			"\nNº arquivos atual: "+ cont, "Atenção", JOptionPane.WARNING_MESSAGE);
+	    	new Thread(new Runnable(){
+	    		private int cont;
+	    		private int numArquivosAtual;
+	    		
+	    		public Runnable init(int cont, int numArquivosAtual) {
+	    	        this.cont = cont;
+	    	        this.numArquivosAtual = numArquivosAtual;
+	    	        return this;
+	    	    }
+	    		
+	            public void run(){
+	            	JOptionPane.showMessageDialog(je, "Algum arquivo foi removido do diretório\n"
+	    	    			+ "Nº arquivo(s) removido(s): "+ (numArquivosAtual - threadCont)+
+	    	    			"\nNº arquivos atual: "+ cont, "Atenção", JOptionPane.WARNING_MESSAGE);
+	            }
+	        }.init(cont, numArquivosAtual)).start();
 	    	
 	    	numArquivosAtual = cont;
 	    }

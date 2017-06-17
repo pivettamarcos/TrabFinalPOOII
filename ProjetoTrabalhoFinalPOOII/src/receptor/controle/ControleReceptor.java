@@ -1,22 +1,14 @@
 package receptor.controle;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.net.ConnectException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.LinkedList;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 
 import receptor.visao.JanelaReceptor;
 
@@ -89,7 +81,7 @@ public class ControleReceptor {
 			
 			adicionaNomesATabela(nomesArquivos, contEmissores);
 			
-			verificaQualEmissor();
+			ativarStatusEmissor();
 			
 			contEmissores++;
 			
@@ -100,17 +92,38 @@ public class ControleReceptor {
 			
 			while(true){
 				String msg = (String)in.readObject();
-				if(msg.equals("KILL"))
+				if(msg.equals("KILL")){
 					emissor.close();
-				else
-					JOptionPane.showMessageDialog(jr, msg +numEmissor, "Atenção", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(jr, "O emissor "+numEmissor+" foi desconectado", "Atenção", JOptionPane.ERROR_MESSAGE);
+					desativarStatusEmissor();
+					return;
+				}else{
+					
+					new Thread(new Runnable(){
+			    		private String msg;
+			    		private int numEmissor;
+			    		
+			    		public Runnable init(String msg, int numEmissor) {
+			    	        this.msg = msg;
+			    	        this.numEmissor = numEmissor;
+			    	        return this;
+			    	    }
+			    		
+			            public void run(){
+			            	JOptionPane.showMessageDialog(jr, msg +numEmissor, "Atenção", JOptionPane.WARNING_MESSAGE);
+			            }
+			        }.init(msg, numEmissor)).start();
+					
+					
+				}
 			}
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(jr, "O emissor "+numEmissor+" foi desconectado", "Atenção", JOptionPane.ERROR_MESSAGE);
+			desativarStatusEmissor();
+			return;
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(jr,"Erro ao receber os arquivos do emissor "+numEmissor, "Erro", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -122,7 +135,7 @@ public class ControleReceptor {
 	}
 	
 	// verifica qual emissor enviou os arquivos (1º a enviar é o 1, 2º a enviar é o 2 e 3º a enviar é o 3)
-	public void verificaQualEmissor() {
+	public void ativarStatusEmissor() {
 		switch(clientes.size()){
 			case 1:
 				jr.getLblImgClean1().setVisible(false);
@@ -135,6 +148,22 @@ public class ControleReceptor {
 			case 3:
 				jr.getLblImgClean3().setVisible(false);
 				jr.getLblImgOK3().setVisible(true);
+		}
+	}
+	
+	public void desativarStatusEmissor() {
+		switch(clientes.size()){
+			case 1:
+				jr.getLblImgClean1().setVisible(true);
+				jr.getLblImgOK1().setVisible(false);
+			break;
+			case 2:
+				jr.getLblImgClean2().setVisible(true);
+				jr.getLblImgOK2().setVisible(false);
+			break;
+			case 3:
+				jr.getLblImgClean3().setVisible(true);
+				jr.getLblImgOK3().setVisible(false);
 		}
 	}
 }

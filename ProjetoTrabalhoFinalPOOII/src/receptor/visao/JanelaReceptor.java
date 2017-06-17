@@ -1,8 +1,5 @@
 package receptor.visao;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -14,6 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 
 // Janela na qual o usuário irá visualizar a listagem dos nomes dos arquivos e o emissor correspondente
 public class JanelaReceptor extends JFrame {
@@ -26,9 +24,10 @@ public class JanelaReceptor extends JFrame {
 	
 
 	public JanelaReceptor() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(JanelaReceptor.class.getResource("/icones/servericon.png")));
 		setTitle("Esta\u00E7\u00E3o Receptora");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 528, 503);
+		setBounds(100, 100, 530, 503);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.control);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -58,12 +57,12 @@ public class JanelaReceptor extends JFrame {
 		
 		JLabel lblEmissor2 = new JLabel("Emissor 2");
 		lblEmissor2.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblEmissor2.setBounds(193, 26, 73, 14);
+		lblEmissor2.setBounds(206, 26, 100, 14);
 		contentPane.add(lblEmissor2);
 		
 		JLabel lblEmissor3 = new JLabel("Emissor 3");
 		lblEmissor3.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblEmissor3.setBounds(374, 26, 69, 14);
+		lblEmissor3.setBounds(397, 27, 69, 14);
 		contentPane.add(lblEmissor3);
 		
 		lblImgOK1 = new JLabel("");
@@ -74,14 +73,14 @@ public class JanelaReceptor extends JFrame {
 		
 		lblImgOK2 = new JLabel("");
 		lblImgOK2.setIcon(new ImageIcon(JanelaReceptor.class.getResource("/icones/ok1.png")));
-		lblImgOK2.setBounds(269, 26, 46, 14);
+		lblImgOK2.setBounds(277, 26, 29, 14);
 		contentPane.add(lblImgOK2);
 		lblImgOK2.setVisible(false);
 		
 		lblImgOK3 = new JLabel("");
 		lblImgOK3.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblImgOK3.setIcon(new ImageIcon(JanelaReceptor.class.getResource("/icones/ok1.png")));
-		lblImgOK3.setBounds(421, 25, 46, 14);
+		lblImgOK3.setBounds(444, 26, 46, 14);
 		contentPane.add(lblImgOK3);
 		lblImgOK3.setVisible(false);
 		
@@ -92,17 +91,17 @@ public class JanelaReceptor extends JFrame {
 		
 		lblImgClean2 = new JLabel("");
 		lblImgClean2.setIcon(new ImageIcon(JanelaReceptor.class.getResource("/icones/clean.png")));
-		lblImgClean2.setBounds(269, 26, 46, 14);
+		lblImgClean2.setBounds(277, 26, 29, 14);
 		contentPane.add(lblImgClean2);
 		
 		lblImgClean3 = new JLabel("");
 		lblImgClean3.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblImgClean3.setIcon(new ImageIcon(JanelaReceptor.class.getResource("/icones/clean.png")));
-		lblImgClean3.setBounds(421, 26, 46, 14);
+		lblImgClean3.setBounds(444, 27, 46, 14);
 		contentPane.add(lblImgClean3);
 		
 		JLabel lblListaDeArquivos = new JLabel("Lista de Arquivos Recebidos");
-		lblListaDeArquivos.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblListaDeArquivos.setFont(new Font("Arial", Font.BOLD, 14));
 		lblListaDeArquivos.setHorizontalAlignment(SwingConstants.CENTER);
 		lblListaDeArquivos.setBounds(83, 51, 342, 23);
 		contentPane.add(lblListaDeArquivos);

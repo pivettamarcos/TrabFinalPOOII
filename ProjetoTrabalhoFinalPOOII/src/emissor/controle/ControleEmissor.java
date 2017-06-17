@@ -24,10 +24,7 @@ public class ControleEmissor extends Thread{
 	private JButton btnEnviarArquivos;
 	private LinkedList<String> nomesArquivos;
 	private String diretorioImagens;
-	private boolean estaRodando;
 	private int numArquivosAtual;
-	private Thread threadEnvio;
-	private Thread threadRecebimento;
 	private Socket socket;
 	private ObjectOutputStream oos;
 	
@@ -36,7 +33,6 @@ public class ControleEmissor extends Thread{
 		this.je = je;
 		this.btnEnviarArquivos = btnEnviarArquivos;
 		this.nomesArquivos = new LinkedList<String>(); 
-		this.estaRodando = false;
 		
 		inicializaActionListeners();
 	}
@@ -54,17 +50,17 @@ public class ControleEmissor extends Thread{
 		
 		je.addWindowListener(new java.awt.event.WindowAdapter() {
 		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-		        terminarSocket();
+		    	if(socket != null)
+		    		terminarSocket();
 		    }
 		});
-		
-		
 	}
 	
 	// método main do emissor
 	public static void main(String[] args) {
 		JanelaEmissor je = new JanelaEmissor();
 		je.setVisible(true);
+		je.setLocationRelativeTo(null);
 		
 		ControleEmissor ce = new ControleEmissor(je, je.getBtnEnviarArquivos());
 	}
@@ -77,11 +73,13 @@ public class ControleEmissor extends Thread{
 		diretorioImagens =  arquivo.getSelectedFile().toString();  
 		// verifica se diretório foi selecionado para adicionar os arquivos
 		if(diretorioImagens != null){
-			estaRodando = true;
-			inicializaNumArquivos();
-			populaArrayNomeArquivos();
-			estabeleConexao();
-			chamaThreads();
+			if(estabeleConexao()){
+				inicializaNumArquivos();
+				populaArrayNomeArquivos();
+				chamaThreads();
+			}else{
+				JOptionPane.showMessageDialog(je,"Não foi possível se conectar ao servidor", "Erro", JOptionPane.ERROR_MESSAGE);
+			}
 			
 		}else{
 			JOptionPane.showMessageDialog(null,"Diretório inválido");
@@ -115,25 +113,20 @@ public class ControleEmissor extends Thread{
 	}
 	
 	// estabelece conexão para envio, informando IP e porta
-	public void estabeleConexao() {
+	public boolean estabeleConexao() {
 		socket = null;
 		try {
 			socket = new Socket(je.getTfIP().getText(), 2222);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		try {
 			oos = new ObjectOutputStream(socket.getOutputStream());
+			return true;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return false;
 		}
 	}
 	
 	// chama as threads necessárias para a execução concorrente do envio, da alteração e do recebimento dos dados
 	public void chamaThreads() {
-		Thread threadEnvio = new Thread(new ThreadEnvio(oos, nomesArquivos));
+		Thread threadEnvio = new Thread(new ThreadEnvio(oos, je, nomesArquivos));
 		threadEnvio.start();
 		
 		Thread threadAlteracao = new Thread(new ThreadAlteracao(oos, je, diretorioImagens, numArquivosAtual));
@@ -145,8 +138,7 @@ public class ControleEmissor extends Thread{
 	
 	public void terminarSocket(){
 		try {
-			if(socket != null)
-				oos.writeObject("KILL");
+			oos.writeObject("KILL");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
