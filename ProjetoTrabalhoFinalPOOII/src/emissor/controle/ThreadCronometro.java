@@ -6,7 +6,7 @@ import javax.swing.SwingUtilities;
 
 import emissor.visao.JanelaEmissor;
 
-//Classe com lógica do fluxo de execução responsável por contar a quantidade de tempo necessário para enviar os arquivos
+// Classe com lógica do fluxo de execução responsável por contar a quantidade de tempo necessário para enviar os arquivos
 public class ThreadCronometro implements Runnable {
 	private JanelaEmissor je;
 	
