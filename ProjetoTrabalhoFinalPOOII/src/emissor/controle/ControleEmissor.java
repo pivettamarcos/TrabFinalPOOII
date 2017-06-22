@@ -27,6 +27,7 @@ public class ControleEmissor extends Thread{
 	private int numArquivosAtual;
 	private Socket socket;
 	private ObjectOutputStream oos;
+	private ThreadCronometro threadCronometro;
 	
 	// construtor da classe
 	public ControleEmissor(JanelaEmissor je, JButton btnEnviarArquivos){
@@ -44,7 +45,8 @@ public class ControleEmissor extends Thread{
 				if(nomesArquivos != null)
 					nomesArquivos.clear();
 				abreDiretorio();
-				//btnEnviarArquivos.setEnabled(false);
+				btnEnviarArquivos.setEnabled(false);
+				je.getTfIP().setEnabled(false);
 			}
 		});
 		
@@ -73,14 +75,16 @@ public class ControleEmissor extends Thread{
 		diretorioImagens =  arquivo.getSelectedFile().toString();  
 		// verifica se diretório foi selecionado para adicionar os arquivos
 		if(diretorioImagens != null){
-			if(estabeleConexao()){
-				inicializaNumArquivos();
-				populaArrayNomeArquivos();
-				chamaThreads();
-			}else{
-				JOptionPane.showMessageDialog(je,"Não foi possível se conectar ao servidor", "Erro", JOptionPane.ERROR_MESSAGE);
-			}
-			
+			System.out.println(socket);
+			if(socket == null){
+				if(estabeleConexao()){
+					inicializaNumArquivos();
+					populaArrayNomeArquivos();
+					chamaThreads();
+				}else{
+					JOptionPane.showMessageDialog(je,"Não foi possível se conectar ao servidor", "Erro", JOptionPane.ERROR_MESSAGE);
+				}
+			}			
 		}else{
 			JOptionPane.showMessageDialog(null,"Diretório inválido");
 		}
@@ -126,13 +130,18 @@ public class ControleEmissor extends Thread{
 	
 	// chama as threads necessárias para a execução concorrente do envio, da alteração e do recebimento dos dados
 	public void chamaThreads() {
+		
+		threadCronometro = new ThreadCronometro(je);
+		Thread tCronometro = new Thread(threadCronometro);
+		tCronometro.start();
+		
 		Thread threadEnvio = new Thread(new ThreadEnvio(oos, je, nomesArquivos));
 		threadEnvio.start();
 		
 		Thread threadAlteracao = new Thread(new ThreadAlteracao(oos, je, diretorioImagens, numArquivosAtual));
 		threadAlteracao.start();
 		
-		Thread threadRecebimento = new Thread(new ThreadRecebimento(socket, je));
+		Thread threadRecebimento = new Thread(new ThreadRecebimento(socket, je, threadCronometro));
 		threadRecebimento.start();		
 	}
 	

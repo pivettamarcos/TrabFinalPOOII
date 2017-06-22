@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import emissor.visao.JanelaEmissor;
@@ -62,22 +63,12 @@ public class ThreadAlteracao implements Runnable{
 				e.printStackTrace();
 			}  
 	    	
-	    	new Thread(new Runnable(){
-	    		private int cont;
-	    		private int numArquivosAtual;
-	    		
-	    		public Runnable init(int cont, int numArquivosAtual) {
-	    	        this.cont = cont;
-	    	        this.numArquivosAtual = numArquivosAtual;
-	    	        return this;
-	    	    }
-	    		
-	            public void run(){
-	            	JOptionPane.showMessageDialog(je, "Algum arquivo foi adicionado no diretório\n"
-	    	    			+ "Nº arquivo(s) adicionado(s): "+ (threadCont - numArquivosAtual)+
-	    	    			"\nNº arquivos atual: "+ cont, "Atenção", JOptionPane.WARNING_MESSAGE);
-	            }
-	        }.init(cont, numArquivosAtual)).start();
+	    	JOptionPane optionPane = new JOptionPane("Algum arquivo foi adicionado no diretório\n"
+	    			+ "Nº arquivo(s) adicionado(s): "+ (threadCont - numArquivosAtual)+
+	    			"\nNº arquivos atual: "+ cont, JOptionPane.WARNING_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+		    JDialog dialog = optionPane.createDialog(je, "Sucesso");
+		    dialog.setModal(false);
+		    dialog.setVisible(true);
 	    	
 	    	numArquivosAtual = cont;
 	    }else if(cont < numArquivosAtual){
@@ -90,22 +81,12 @@ public class ThreadAlteracao implements Runnable{
 				e.printStackTrace();
 			}  
 	    	
-	    	new Thread(new Runnable(){
-	    		private int cont;
-	    		private int numArquivosAtual;
-	    		
-	    		public Runnable init(int cont, int numArquivosAtual) {
-	    	        this.cont = cont;
-	    	        this.numArquivosAtual = numArquivosAtual;
-	    	        return this;
-	    	    }
-	    		
-	            public void run(){
-	            	JOptionPane.showMessageDialog(je, "Algum arquivo foi removido do diretório\n"
-	    	    			+ "Nº arquivo(s) removido(s): "+ (numArquivosAtual - threadCont)+
-	    	    			"\nNº arquivos atual: "+ cont, "Atenção", JOptionPane.WARNING_MESSAGE);
-	            }
-	        }.init(cont, numArquivosAtual)).start();
+			JOptionPane optionPane = new JOptionPane("Algum arquivo foi removido do diretório\n"
+	    			+ "Nº arquivo(s) removido(s): "+ (numArquivosAtual - threadCont)+
+	    			"\nNº arquivos atual: "+ cont, JOptionPane.WARNING_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+		    JDialog dialog = optionPane.createDialog(je, "Sucesso");
+		    dialog.setModal(false);
+		    dialog.setVisible(true);
 	    	
 	    	numArquivosAtual = cont;
 	    }

@@ -8,20 +8,22 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.LinkedList;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
+import emissor.modelo.Cliente;
 import receptor.visao.JanelaReceptor;
 
 //Classe de controle da recepção de arquivos
 public class ControleReceptor {
 	private JanelaReceptor jr;
 	private int contEmissores;
-	private LinkedList<Socket> clientes;
+	private LinkedList<Cliente> clientes;
 	private ServerSocket serverSocket;
 	
 	// construtor da classe
 	public ControleReceptor(JanelaReceptor jr, ServerSocket serverSocket){
-		clientes = new LinkedList<Socket>();
+		clientes = new LinkedList<Cliente>();
 		contEmissores = 0;
 		this.serverSocket = serverSocket;
 		this.jr = jr;
@@ -48,16 +50,19 @@ public class ControleReceptor {
 		if(clientes.size() < 3){
 			Thread conecta = new Thread(new Runnable() {
 		         public void run() {
-		        	Socket cliente = null;
+		        	Socket socketCliente = null;
+		        	Cliente cliente = null;
 		     		try {
-		     			cliente = serverSocket.accept();
+		     			socketCliente = serverSocket.accept();
+
+		     			cliente = new Cliente(socketCliente, clientes.size());
 		     			clientes.add(cliente);
-		     			
+		     			System.out.println("mandole");
 		     			conecta();
 		     		} catch (IOException e) {
 		     			e.printStackTrace();
 		     		}
-		     		estabeleceConexao(clientes.size(),cliente);
+		     		estabeleceConexao(cliente.getId(),cliente.getSocket());
 		         }
 			});
 			conecta.start();
@@ -65,7 +70,8 @@ public class ControleReceptor {
 	}
 	
 	// estabelece conexão, recebendo os nomes dos arquivos
-	private void estabeleceConexao(int numEmissor, Socket emissor){
+	private void estabeleceConexao(int idEmissor, Socket emissor){
+		int numEmissor = idEmissor + 1;
 		try {		
 			System.out.println("[Conexão do emissor "+ clientes.size() +"]");
 			ObjectInputStream in = new ObjectInputStream(emissor.getInputStream());
@@ -81,7 +87,7 @@ public class ControleReceptor {
 			
 			adicionaNomesATabela(nomesArquivos, contEmissores);
 			
-			ativarStatusEmissor();
+			ativarStatusEmissor(idEmissor);
 			
 			contEmissores++;
 			
@@ -94,36 +100,40 @@ public class ControleReceptor {
 				String msg = (String)in.readObject();
 				if(msg.equals("KILL")){
 					emissor.close();
-					JOptionPane.showMessageDialog(jr, "O emissor "+numEmissor+" foi desconectado", "Atenção", JOptionPane.ERROR_MESSAGE);
-					desativarStatusEmissor();
+					
+					JOptionPane optionPane = new JOptionPane("O emissor "+numEmissor+" foi desconectado", JOptionPane.ERROR_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+				    JDialog dialog = optionPane.createDialog(jr, "Atenção");
+				    dialog.setModal(false);
+				    dialog.setVisible(true);
+				    
+					desativarStatusEmissor(idEmissor);
 					return;
 				}else{
-					
-					new Thread(new Runnable(){
-			    		private String msg;
-			    		private int numEmissor;
-			    		
-			    		public Runnable init(String msg, int numEmissor) {
-			    	        this.msg = msg;
-			    	        this.numEmissor = numEmissor;
-			    	        return this;
-			    	    }
-			    		
-			            public void run(){
-			            	JOptionPane.showMessageDialog(jr, msg +numEmissor, "Atenção", JOptionPane.WARNING_MESSAGE);
-			            }
-			        }.init(msg, numEmissor)).start();
-					
-					
+					JOptionPane optionPane = new JOptionPane(msg +numEmissor, JOptionPane.WARNING_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+				    JDialog dialog = optionPane.createDialog(jr, "Atenção");
+				    dialog.setModal(false);
+				    dialog.setVisible(true);
+
 				}
 			}
 			
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(jr, "O emissor "+numEmissor+" foi desconectado", "Atenção", JOptionPane.ERROR_MESSAGE);
-			desativarStatusEmissor();
+			try {
+				emissor.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			JOptionPane optionPane = new JOptionPane("O emissor "+numEmissor+" foi desconectado", JOptionPane.ERROR_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+		    JDialog dialog = optionPane.createDialog(jr, "Erro");
+		    dialog.setModal(false);
+		    dialog.setVisible(true);
+		    desativarStatusEmissor(idEmissor);
 			return;
 		} catch (ClassNotFoundException e) {
-			JOptionPane.showMessageDialog(jr,"Erro ao receber os arquivos do emissor "+numEmissor, "Erro", JOptionPane.ERROR_MESSAGE);
+			JOptionPane optionPane = new JOptionPane("Erro ao receber os arquivos do emissor "+numEmissor, JOptionPane.ERROR_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+		    JDialog dialog = optionPane.createDialog(jr, "Erro");
+		    dialog.setModal(false);
+		    dialog.setVisible(true);
 		}
 	}
 	
@@ -135,33 +145,33 @@ public class ControleReceptor {
 	}
 	
 	// verifica qual emissor enviou os arquivos (1º a enviar é o 1, 2º a enviar é o 2 e 3º a enviar é o 3)
-	public void ativarStatusEmissor() {
-		switch(clientes.size()){
-			case 1:
+	public void ativarStatusEmissor(int numEmissor) {
+		switch(numEmissor){
+			case 0:
 				jr.getLblImgClean1().setVisible(false);
 				jr.getLblImgOK1().setVisible(true);
 			break;
-			case 2:
+			case 1:
 				jr.getLblImgClean2().setVisible(false);
 				jr.getLblImgOK2().setVisible(true);
 			break;
-			case 3:
+			case 2:
 				jr.getLblImgClean3().setVisible(false);
 				jr.getLblImgOK3().setVisible(true);
 		}
 	}
 	
-	public void desativarStatusEmissor() {
-		switch(clientes.size()){
-			case 1:
+	public void desativarStatusEmissor(int numEmissor) {
+		switch(numEmissor){
+			case 0:
 				jr.getLblImgClean1().setVisible(true);
 				jr.getLblImgOK1().setVisible(false);
 			break;
-			case 2:
+			case 1:
 				jr.getLblImgClean2().setVisible(true);
 				jr.getLblImgOK2().setVisible(false);
 			break;
-			case 3:
+			case 2:
 				jr.getLblImgClean3().setVisible(true);
 				jr.getLblImgOK3().setVisible(false);
 		}

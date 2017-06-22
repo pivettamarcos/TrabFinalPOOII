@@ -26,6 +26,9 @@ public class JanelaEmissor extends JFrame {
 	private JPanel contentPane;
 	private JButton btnEnviarArquivos;
 	private JTextField tfIP;
+	private JLabel lblCronometro;
+	private JLabel iconeEnviado;
+	private JLabel iconeFalha;
 	
 	// construtor com os componentes e comportamentos da janela de emissão
 	public JanelaEmissor() {
@@ -55,14 +58,15 @@ public class JanelaEmissor extends JFrame {
 			lblTitulo.setBounds(61, 11, 330, 29);
 			contentPane.add(lblTitulo);
 			
-			JLabel iconeEnviado = new JLabel("");
+			iconeEnviado = new JLabel("");
 			iconeEnviado.setIcon(new ImageIcon(JanelaEmissor.class.getResource("/icones/ok1.png")));
-			iconeEnviado.setBounds(149, 237, 46, 23);
+			iconeEnviado.setBounds(111, 250, 81, 14);
 			contentPane.add(iconeEnviado);
+			iconeEnviado.setVisible(false);
 			
-			JLabel iconeFalha = new JLabel("");
+			iconeFalha = new JLabel("");
 			iconeFalha.setIcon(new ImageIcon(JanelaEmissor.class.getResource("/icones/clean.png")));
-			iconeFalha.setBounds(149, 237, 46, 23);
+			iconeFalha.setBounds(111, 250, 81, 14);
 			contentPane.add(iconeFalha);
 			
 			btnEnviarArquivos = new JButton("Enviar Arquivos");
@@ -70,17 +74,12 @@ public class JanelaEmissor extends JFrame {
 			
 			btnEnviarArquivos.setBounds(284, 234, 150, 29);
 			contentPane.add(btnEnviarArquivos);
-			
-			JFormattedTextField ftfCronometro = new JFormattedTextField();
-			ftfCronometro.setBounds(60, 240, 79, 20);
-			contentPane.add(ftfCronometro);
 			MaskFormatter maskData = null;
 			try {
 				maskData = new MaskFormatter("##:##:####");
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-			maskData.install(ftfCronometro);
 			
 			tfIP = new JTextField();
 			tfIP.setBounds(187, 126, 113, 20);
@@ -102,14 +101,32 @@ public class JanelaEmissor extends JFrame {
 			separator_1.setBounds(0, 221, 444, 23);
 			contentPane.add(separator_1);
 			
+			lblCronometro = new JLabel("00:00:00");
+			lblCronometro.setBounds(57, 250, 77, 14);
+			contentPane.add(lblCronometro);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	// getters e setters para referenciar os componentes gráficos no controle
+	
+	
 	public JButton getBtnEnviarArquivos() {
 		return btnEnviarArquivos;
+	}
+
+	public JLabel getIconeEnviado() {
+		return iconeEnviado;
+	}
+
+	public JLabel getIconeFalha() {
+		return iconeFalha;
+	}
+
+	public JLabel getLblCronometro() {
+		return lblCronometro;
 	}
 
 	public void setBtnEnviarArquivos(JButton btnEnviarArquivos) {
