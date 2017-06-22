@@ -100,8 +100,10 @@ public class ControleReceptor {
 				String msg = (String)in.readObject();
 				if(msg.equals("KILL")){
 					emissor.close();
+					out.close();
+					in.close();
 					
-					JOptionPane optionPane = new JOptionPane("O emissor "+numEmissor+" foi desconectado", JOptionPane.ERROR_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+					JOptionPane optionPane = new JOptionPane("O emissor "+ numEmissor +" foi desconectado", JOptionPane.ERROR_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
 				    JDialog dialog = optionPane.createDialog(jr, "Atenção");
 				    dialog.setModal(false);
 				    dialog.setVisible(true);
@@ -109,15 +111,14 @@ public class ControleReceptor {
 					desativarStatusEmissor(idEmissor);
 					return;
 				}else{
-					JOptionPane optionPane = new JOptionPane(msg +numEmissor, JOptionPane.WARNING_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+					JOptionPane optionPane = new JOptionPane(msg + numEmissor, JOptionPane.WARNING_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
 				    JDialog dialog = optionPane.createDialog(jr, "Atenção");
 				    dialog.setModal(false);
 				    dialog.setVisible(true);
-
 				}
 			}
 			
-		} catch (IOException e) {
+		} catch (IOException | ClassNotFoundException e) {
 			try {
 				emissor.close();
 			} catch (IOException e1) {
@@ -129,11 +130,6 @@ public class ControleReceptor {
 		    dialog.setVisible(true);
 		    desativarStatusEmissor(idEmissor);
 			return;
-		} catch (ClassNotFoundException e) {
-			JOptionPane optionPane = new JOptionPane("Erro ao receber os arquivos do emissor "+numEmissor, JOptionPane.ERROR_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-		    JDialog dialog = optionPane.createDialog(jr, "Erro");
-		    dialog.setModal(false);
-		    dialog.setVisible(true);
 		}
 	}
 	

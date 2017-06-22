@@ -142,14 +142,14 @@ public class ControleEmissor extends Thread{
 		threadAlteracao.start();
 		
 		Thread threadRecebimento = new Thread(new ThreadRecebimento(socket, je, threadCronometro));
-		threadRecebimento.start();		
+		threadRecebimento.start();	
 	}
 	
 	public void terminarSocket(){
 		try {
 			oos.writeObject("KILL");
+			oos.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}  
 	}

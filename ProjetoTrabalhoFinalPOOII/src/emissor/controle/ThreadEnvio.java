@@ -30,7 +30,6 @@ public class ThreadEnvio implements Runnable{
 	public void enviaArquivos() {
 		try {			
 			oos.writeObject(nomesArquivos);  
-			
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(je,"Erro ao enviar os arquivos", "Erro", JOptionPane.ERROR_MESSAGE);
 		}
