@@ -15,7 +15,7 @@ public class ThreadRecebimento implements Runnable{
 	private JanelaEmissor je;
 	private ThreadCronometro threadCronometro;
 	
-	// construtor da Thread
+	// construtor da Thread, que recebe o socket de conexão realizada, a janela e a thread do cronometro que conta o tempo de envio
 	public ThreadRecebimento(Socket socket, JanelaEmissor je, ThreadCronometro threadCronometro) {
 		super();
 		this.socket = socket;
@@ -28,10 +28,9 @@ public class ThreadRecebimento implements Runnable{
 		recebeArquivos();
 	}
 	
-	// recebe os arquivos com a utilização da classe ObjectInputStream e do método readObject
+	// controle de recebimento dos arquivos com a utilização da classe ObjectInputStream e do método readObject, para enviar mensagem de sucesso ao emissor
 	public void recebeArquivos() {
 		ObjectInputStream in = null;
-
 		try {
 			in = new ObjectInputStream(socket.getInputStream());
 			JOptionPane optionPane = new JOptionPane((String)in.readObject(), JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
@@ -40,11 +39,8 @@ public class ThreadRecebimento implements Runnable{
 		    dialog.setVisible(true);
 		    			
 			threadCronometro.setRodando(false);
-			System.out.println("parou");
-
 		} catch (ClassNotFoundException | IOException e) {
 			JOptionPane.showMessageDialog(je,"Erro ao enviar os arquivos", "Erro", JOptionPane.ERROR_MESSAGE);
 		}
-	}
-	
+	}	
 }
