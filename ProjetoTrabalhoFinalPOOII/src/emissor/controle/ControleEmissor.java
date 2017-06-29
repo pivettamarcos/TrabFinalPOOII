@@ -2,16 +2,11 @@ package emissor.controle;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
-
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -76,7 +71,7 @@ public class ControleEmissor extends Thread{
 		// verifica se diretório foi selecionado para adicionar os arquivos
 		if(diretorioImagens != null){
 			System.out.println(socket);
-			if(socket == null){
+			if(socket == null){ 
 				if(estabeleConexao()){
 					inicializaNumArquivos();
 					populaArrayNomeArquivos();
@@ -116,7 +111,7 @@ public class ControleEmissor extends Thread{
 	    }
 	}
 	
-	// estabelece conexão para envio, informando IP e porta
+	// estabelece conexão para envio, recebendo o IP do usuário e a porta definida (2222)
 	public boolean estabeleConexao() {
 		socket = null;
 		try {
@@ -130,7 +125,6 @@ public class ControleEmissor extends Thread{
 	
 	// chama as threads necessárias para a execução concorrente do envio, da alteração e do recebimento dos dados
 	public void chamaThreads() {
-		
 		threadCronometro = new ThreadCronometro(je);
 		Thread tCronometro = new Thread(threadCronometro);
 		tCronometro.start();
@@ -145,6 +139,7 @@ public class ControleEmissor extends Thread{
 		threadRecebimento.start();	
 	}
 	
+	// finaliza o socket quando o usuário sair da aplicação
 	public void terminarSocket(){
 		try {
 			oos.writeObject("KILL");

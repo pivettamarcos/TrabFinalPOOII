@@ -18,11 +18,9 @@ public class JanelaReceptor extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private DefaultTableModel modeloTabela;
-	// imagens que indicam o recebimento dos dados de cada um dos emissores
 	private JLabel lblImgOK1,lblImgOK2,lblImgOK3; 
 	private JLabel lblImgClean1,lblImgClean2,lblImgClean3;
 	
-
 	public JanelaReceptor() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(JanelaReceptor.class.getResource("/icones/servericon.png")));
 		setTitle("Esta\u00E7\u00E3o Receptora");
@@ -37,7 +35,7 @@ public class JanelaReceptor extends JFrame {
 		JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setBounds(73, 85, 358, 356);
 		contentPane.add(scrollPane);
-		// componente gráfico no qual serão listados os arquivos
+		// componente gráfico no qual serão listados os arquivos (JTable)
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
@@ -47,7 +45,6 @@ public class JanelaReceptor extends JFrame {
 			}
 		));
 		modeloTabela = (DefaultTableModel) table.getModel();
-		
 		scrollPane.setViewportView(table);
 		
 		JLabel lblEmissor1 = new JLabel("Emissor 1");
@@ -65,6 +62,7 @@ public class JanelaReceptor extends JFrame {
 		lblEmissor3.setBounds(397, 27, 69, 14);
 		contentPane.add(lblEmissor3);
 		
+		// imagens que indicam o recebimento dos dados de cada um dos emissores
 		lblImgOK1 = new JLabel("");
 		lblImgOK1.setIcon(new ImageIcon(JanelaReceptor.class.getResource("/icones/ok1.png")));
 		lblImgOK1.setBounds(101, 26, 46, 14);
@@ -107,7 +105,7 @@ public class JanelaReceptor extends JFrame {
 		contentPane.add(lblListaDeArquivos);
 	}
 
-	// getters e setters para referenciar componentes no controle
+	// getters e setters para referenciar componentes no controle de recepção dos arquivos
 	public DefaultTableModel getModeloTabela() {
 		return modeloTabela;
 	}
@@ -139,5 +137,4 @@ public class JanelaReceptor extends JFrame {
 	public JLabel getLblImgClean3() {
 		return lblImgClean3;
 	}
-	
 }

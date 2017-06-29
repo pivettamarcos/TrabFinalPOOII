@@ -3,17 +3,16 @@ package emissor.controle;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.LinkedList;
-
 import javax.swing.JOptionPane;
-
 import emissor.visao.JanelaEmissor;
 
-//Classe com lógica do fluxo de execução responsável por enviar os nomes dos arquivos
+// Classe com lógica do fluxo de execução responsável por enviar os nomes dos arquivos para o servidor (receptor)
 public class ThreadEnvio implements Runnable{
 	private ObjectOutputStream oos;
 	private JanelaEmissor je;
 	private LinkedList<String> nomesArquivos;
-	// construtor da Thread
+	
+	// construtor da Thread recebendo a saída, a janela e a lista com os nomes dos arquivos
 	public ThreadEnvio(ObjectOutputStream oos, JanelaEmissor je, LinkedList<String> nomesArquivos) {
 		super();
 		this.oos = oos;
@@ -34,5 +33,4 @@ public class ThreadEnvio implements Runnable{
 			JOptionPane.showMessageDialog(je,"Erro ao enviar os arquivos", "Erro", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
 }

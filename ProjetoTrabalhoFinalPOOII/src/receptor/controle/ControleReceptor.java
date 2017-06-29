@@ -5,23 +5,20 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.LinkedList;
-
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-
 import emissor.modelo.Cliente;
 import receptor.visao.JanelaReceptor;
 
 //Classe de controle da recepção de arquivos
 public class ControleReceptor {
 	private JanelaReceptor jr;
-	private int contEmissores;
-	private LinkedList<Cliente> clientes;
-	private ServerSocket serverSocket;
+	private int contEmissores; // contador de emissores
+	private LinkedList<Cliente> clientes; // lista de clientes que irão se conectar
+	private ServerSocket serverSocket; // socket que opera em determinada porta aguardando conexão
 	
-	// construtor da classe
+	// construtor da classe, recebendo a janela e o serverSocket, que estabelece a porta que o servidor estará rodando
 	public ControleReceptor(JanelaReceptor jr, ServerSocket serverSocket){
 		clientes = new LinkedList<Cliente>();
 		contEmissores = 0;
@@ -29,15 +26,14 @@ public class ControleReceptor {
 		this.jr = jr;
 	}
 
-	// método main do receptor
+	// método main do receptor, chamando o construtor do controle
 	public static void main(String[] args) {
 		JanelaReceptor jr = new JanelaReceptor();
 		jr.setVisible(true);
 		jr.setLocationRelativeTo(null);
-		
 		ControleReceptor ce = null;
 		try {
-			ce = new ControleReceptor(jr, new ServerSocket(2222));
+			ce = new ControleReceptor(jr, new ServerSocket(2222)); // porta de conexão: 2222
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}	
@@ -45,7 +41,7 @@ public class ControleReceptor {
 		
 	}
 	
-	// método com Thread interna para realizar a conexão
+	// método com Thread interna para realizar a conexão com o emissor de dados, considerando o número de clientes máximo igual a 3
 	private void conecta(){
 		if(clientes.size() < 3){
 			Thread conecta = new Thread(new Runnable() {
@@ -54,15 +50,15 @@ public class ControleReceptor {
 		        	Cliente cliente = null;
 		     		try {
 		     			socketCliente = serverSocket.accept();
-
+		     			// modelo recebe o cliente e adiciona-o a lista
 		     			cliente = new Cliente(socketCliente, clientes.size());
 		     			clientes.add(cliente);
-		     			System.out.println("mandole");
 		     			conecta();
 		     		} catch (IOException e) {
 		     			e.printStackTrace();
 		     		}
-		     		estabeleceConexao(cliente.getId(),cliente.getSocket());
+		     		// após conectar com o cliente, envia e exibe os nomes dos arquivos do diretório selecionado no receptor
+		     		mandaNomesArquivos(cliente.getId(),cliente.getSocket());
 		         }
 			});
 			conecta.start();
@@ -70,10 +66,11 @@ public class ControleReceptor {
 	}
 	
 	// estabelece conexão, recebendo os nomes dos arquivos
-	private void estabeleceConexao(int idEmissor, Socket emissor){
+	private void mandaNomesArquivos(int idEmissor, Socket emissor){
 		int numEmissor = idEmissor + 1;
 		try {		
 			System.out.println("[Conexão do emissor "+ clientes.size() +"]");
+			// recebimento da lista com os nomes dos arquivos de imagens cujo diretório foi selecionado
 			ObjectInputStream in = new ObjectInputStream(emissor.getInputStream());
 			LinkedList<String> nomesArquivos = new LinkedList<String>();
 			
@@ -82,48 +79,53 @@ public class ControleReceptor {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-			
-			System.out.println(nomesArquivos);
-			
+			//System.out.println(nomesArquivos);
+			// adiciona os nomes na JTable
 			adicionaNomesATabela(nomesArquivos, contEmissores);
-			
+			// mostra que determinado emissor está ativo no momento
 			ativarStatusEmissor(idEmissor);
-			
 			contEmissores++;
 			
+			// envia mensagem de envio para o emissor
 			ObjectOutputStream out = new ObjectOutputStream(emissor.getOutputStream());
 			out.writeObject("Envio feito com sucesso");  
 
 			System.out.println("[Envio feito com sucesso]");
 			
+			// se o emissor for desconectado, avisa para o servidor
 			while(true){
 				String msg = (String)in.readObject();
-				if(msg.equals("KILL")){
+				if(msg.equals("KILL")){ // quando usuário fecha a janela manda uma String "KILL"
 					emissor.close();
-					out.close();
-					in.close();
 					
-					JOptionPane optionPane = new JOptionPane("O emissor "+ numEmissor +" foi desconectado", JOptionPane.ERROR_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+					// avisa que emissor foi desconectado
+					JOptionPane optionPane = new JOptionPane("O emissor "+numEmissor+" foi desconectado", JOptionPane.ERROR_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
 				    JDialog dialog = optionPane.createDialog(jr, "Atenção");
 				    dialog.setModal(false);
 				    dialog.setVisible(true);
 				    
+				    // mostra o ícone de emissor desconectado
 					desativarStatusEmissor(idEmissor);
 					return;
+					
 				}else{
-					JOptionPane optionPane = new JOptionPane(msg + numEmissor, JOptionPane.WARNING_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+					JOptionPane optionPane = new JOptionPane(msg +numEmissor, JOptionPane.WARNING_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
 				    JDialog dialog = optionPane.createDialog(jr, "Atenção");
 				    dialog.setModal(false);
 				    dialog.setVisible(true);
+
 				}
 			}
 			
 		} catch (IOException | ClassNotFoundException e) {
+			
 			try {
 				emissor.close();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
+			
+			// capturando a exceção de i/o, o servidor também é desconectado
 			JOptionPane optionPane = new JOptionPane("O emissor "+numEmissor+" foi desconectado", JOptionPane.ERROR_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
 		    JDialog dialog = optionPane.createDialog(jr, "Erro");
 		    dialog.setModal(false);
@@ -133,14 +135,14 @@ public class ControleReceptor {
 		}
 	}
 	
-	// adiciona os nomes dos arquivos na tabela 
+	// adiciona os nomes dos arquivos na tabela indicando o emissor correspondente 
 	private void adicionaNomesATabela(LinkedList<String> nomesArquivos, int contEmissores){
 		for (int i = 0; i < nomesArquivos.size(); i++) {
 			jr.getModeloTabela().addRow(new Object[]{nomesArquivos.get(i), contEmissores + 1});
 	    }
 	}
 	
-	// verifica qual emissor enviou os arquivos (1º a enviar é o 1, 2º a enviar é o 2 e 3º a enviar é o 3)
+	// verifica qual emissor enviou os arquivos (1º a enviar é o primeiro, 2º a enviar é o segundo e 3º a enviar é o terceiro)
 	public void ativarStatusEmissor(int numEmissor) {
 		switch(numEmissor){
 			case 0:
@@ -157,6 +159,7 @@ public class ControleReceptor {
 		}
 	}
 	
+	// mostra ícone que representa que o emissor foi desconectado
 	public void desativarStatusEmissor(int numEmissor) {
 		switch(numEmissor){
 			case 0:
