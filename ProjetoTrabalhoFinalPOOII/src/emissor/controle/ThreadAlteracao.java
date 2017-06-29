@@ -47,7 +47,7 @@ public class ThreadAlteracao implements Runnable{
 	    try {
 			Thread.sleep(500); // Thread para execução por 0,5 segundos antes de exibir a alteração realizada
 		} catch (InterruptedException e1) {
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(je,"Erro ao dar sleep na thread", "Erro", JOptionPane.ERROR_MESSAGE);
 		}
 	    
 	    final int threadCont = cont;
@@ -61,14 +61,14 @@ public class ThreadAlteracao implements Runnable{
 	    			+ "Nº arquivo(s) adicionado(s): "+ (cont - numArquivosAtual)+
 	    			"\nNº arquivos atual: "+ cont + "\n Emissor:");
 			} catch (IOException e) {
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(je,"Erro ao escrever no objeto", "Erro", JOptionPane.ERROR_MESSAGE);
 			}  
 	    	
 	    	// mostra mensagem para o usuário que adicionou o arquivo
 	    	JOptionPane optionPane = new JOptionPane("Algum arquivo foi adicionado no diretório\n"
 	    			+ "Nº arquivo(s) adicionado(s): "+ (threadCont - numArquivosAtual)+
 	    			"\nNº arquivos atual: "+ cont, JOptionPane.WARNING_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-		    JDialog dialog = optionPane.createDialog(je, "Sucesso");
+		    JDialog dialog = optionPane.createDialog(je, "Atenção");
 		    dialog.setModal(false);
 		    dialog.setVisible(true);
 	    
@@ -80,14 +80,15 @@ public class ThreadAlteracao implements Runnable{
 	    			+ "Nº arquivo(s) removido(s): "+ (numArquivosAtual - cont)+
 	    			"\nNº arquivos atual: "+ cont + "\nEmissor:");
 			} catch (IOException e) {
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(je,"Erro ao escrever no objeto", "Erro", JOptionPane.ERROR_MESSAGE);
+
 			}  
 	    	
 	    	// mostra mensagem para o usuário que adicionou o arquivo
 			JOptionPane optionPane = new JOptionPane("Algum arquivo foi removido do diretório\n"
 	    			+ "Nº arquivo(s) removido(s): "+ (numArquivosAtual - threadCont)+
 	    			"\nNº arquivos atual: "+ cont, JOptionPane.WARNING_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-		    JDialog dialog = optionPane.createDialog(je, "Sucesso");
+		    JDialog dialog = optionPane.createDialog(je, "Atenção");
 		    dialog.setModal(false);
 		    dialog.setVisible(true);
 	    	

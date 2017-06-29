@@ -35,7 +35,7 @@ public class ControleReceptor {
 		try {
 			ce = new ControleReceptor(jr, new ServerSocket(2222)); // porta de conexão: 2222
 		} catch (IOException e1) {
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(jr,"Erro ao criar serversocket", "Erro", JOptionPane.ERROR_MESSAGE);
 		}	
 		ce.conecta();
 		
@@ -55,13 +55,28 @@ public class ControleReceptor {
 		     			clientes.add(cliente);
 		     			conecta();
 		     		} catch (IOException e) {
-		     			e.printStackTrace();
+		    			JOptionPane.showMessageDialog(jr,"Erro ao aceitar cliente", "Erro", JOptionPane.ERROR_MESSAGE);
 		     		}
 		     		// após conectar com o cliente, envia e exibe os nomes dos arquivos do diretório selecionado no receptor
 		     		mandaNomesArquivos(cliente.getId(),cliente.getSocket());
 		         }
 			});
 			conecta.start();
+		}else{
+			Thread conecta2 = new Thread(new Runnable() {
+		         public void run() {
+		        	Socket socketCliente = null;
+		        	Cliente cliente = null;
+		     		try {
+		     			socketCliente = serverSocket.accept();
+		     			ObjectOutputStream out = new ObjectOutputStream(socketCliente.getOutputStream());
+		    			out.writeObject("O receptor já possui o número de emissores máximo");  
+		     		} catch (IOException e) {
+		    			JOptionPane.showMessageDialog(jr,"Erro ao aceitar cliente", "Erro", JOptionPane.ERROR_MESSAGE);
+		     		}
+		         }
+			});
+			conecta2.start();
 		}
 	}
 	
@@ -77,7 +92,7 @@ public class ControleReceptor {
 			try {
 				nomesArquivos = (LinkedList<String>)in.readObject();
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+    			JOptionPane.showMessageDialog(jr,"Erro ao ler objeto com nome dos arquivos", "Erro", JOptionPane.ERROR_MESSAGE);
 			}
 			//System.out.println(nomesArquivos);
 			// adiciona os nomes na JTable
@@ -122,7 +137,7 @@ public class ControleReceptor {
 			try {
 				emissor.close();
 			} catch (IOException e1) {
-				e1.printStackTrace();
+    			JOptionPane.showMessageDialog(jr,"Erro ao fechar o socket", "Erro", JOptionPane.ERROR_MESSAGE);
 			}
 			
 			// capturando a exceção de i/o, o servidor também é desconectado

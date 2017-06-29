@@ -1,5 +1,7 @@
 package emissor.controle;
 
+import javax.swing.JOptionPane;
+
 import emissor.visao.JanelaEmissor;
 
 // Classe com lógica do fluxo de execução responsável por contar a quantidade de tempo necessário para enviar os arquivos
@@ -46,7 +48,7 @@ public class ThreadCronometro implements Runnable {
         try {
 			Thread.sleep(1000); // Thread para um segundo para contar a próxima unidade de tempo
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(je,"Erro ao dar sleep na thread", "Erro", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

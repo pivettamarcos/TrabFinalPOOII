@@ -22,6 +22,7 @@ public class JanelaReceptor extends JFrame {
 	private JLabel lblImgClean1,lblImgClean2,lblImgClean3;
 	
 	public JanelaReceptor() {
+		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(JanelaReceptor.class.getResource("/icones/servericon.png")));
 		setTitle("Esta\u00E7\u00E3o Receptora");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -145,7 +145,7 @@ public class ControleEmissor extends Thread{
 			oos.writeObject("KILL");
 			oos.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(je,"Erro ao remover o socket", "Erro", JOptionPane.ERROR_MESSAGE);
 		}  
 	}
 }

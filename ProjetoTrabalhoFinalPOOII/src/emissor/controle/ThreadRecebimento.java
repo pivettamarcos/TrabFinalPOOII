@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 
 import emissor.visao.JanelaEmissor;
 
-//Classe com lógica do fluxo de execução responsável por receber os arquivos do diretório
+//Classe que escuta pela mensagem de retorno da aplicação receptor
 public class ThreadRecebimento implements Runnable{
 	private Socket socket;
 	private JanelaEmissor je;
@@ -33,8 +33,19 @@ public class ThreadRecebimento implements Runnable{
 		ObjectInputStream in = null;
 		try {
 			in = new ObjectInputStream(socket.getInputStream());
-			JOptionPane optionPane = new JOptionPane((String)in.readObject(), JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-		    JDialog dialog = optionPane.createDialog(je, "Sucesso");
+			String recebimento = (String)in.readObject();
+			
+			JOptionPane optionPane = null;
+			JDialog dialog = null;
+			if(recebimento.equals("Envio feito com sucesso")){
+				optionPane = new JOptionPane(recebimento, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+				dialog = optionPane.createDialog(je, "Sucesso");
+			}else if(recebimento.equals("O receptor já possui o número de emissores máximo")){
+				optionPane = new JOptionPane(recebimento, JOptionPane.ERROR_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+				dialog = optionPane.createDialog(je, "Erro");
+			}
+
+			
 		    dialog.setModal(false);
 		    dialog.setVisible(true);
 		    			
